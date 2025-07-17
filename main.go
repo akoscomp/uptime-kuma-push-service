@@ -43,7 +43,9 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 	
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(response)
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		log.Printf("Error encoding health response: %v", err)
+	}
 }
 
 func main() {
@@ -65,7 +67,7 @@ func main() {
 	// Define cronjobs
 	s := gocron.NewScheduler(time.UTC)
 
-	s.Cron(cron).Do(func() {
+	_, err := s.Cron(cron).Do(func() {
 
 		// To get milliseconds
 		start := time.Now()
@@ -104,6 +106,9 @@ func main() {
 		}
 
 	})
+	if err != nil {
+		log.Fatalf("Error scheduling cron job: %v", err)
+	}
 
 	// Start scheduler
 	s.StartBlocking()
