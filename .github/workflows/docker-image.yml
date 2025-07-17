@@ -44,7 +44,7 @@ jobs:
           type=semver,pattern={{major}}.{{minor}}
 
     - name: Debug tags
-      run: echo "Tags generated: ${{ steps.meta.outputs.tags }}"
+      run: echo "Tags generated ${{ steps.meta.outputs.tags }}"
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
