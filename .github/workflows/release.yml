@@ -1,0 +1,47 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.24'
+
+    - name: Build binaries
+      run: |
+        GOOS=linux GOARCH=amd64 go build -o uptime-kuma-push-linux-amd64 .
+        GOOS=linux GOARCH=arm64 go build -o uptime-kuma-push-linux-arm64 .
+        GOOS=linux GOARCH=arm GOARM=7 go build -o uptime-kuma-push-linux-armv7 .
+        GOOS=darwin GOARCH=amd64 go build -o uptime-kuma-push-darwin-amd64 .
+        GOOS=darwin GOARCH=arm64 go build -o uptime-kuma-push-darwin-arm64 .
+        GOOS=windows GOARCH=amd64 go build -o uptime-kuma-push-windows-amd64.exe .
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: |
+          uptime-kuma-push-linux-amd64
+          uptime-kuma-push-linux-arm64
+          uptime-kuma-push-linux-armv7
+          uptime-kuma-push-darwin-amd64
+          uptime-kuma-push-darwin-arm64
+          uptime-kuma-push-windows-amd64.exe
+        generate_release_notes: true
+        draft: false
+        prerelease: false 
