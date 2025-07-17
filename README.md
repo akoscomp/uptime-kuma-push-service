@@ -4,29 +4,75 @@
 
 This Docker image is for sending a heartbeat to an [Uptime Kuma](https://github.com/louislam/uptime-kuma) server. Here you will find a little introduction on how to use it.
 
-The whole thing is brought to run in a Docker container. For this, a few variables from the Dockerfile are needed, if they are not stored, then they have a default value stored. You can find the variables here.
+The application is written in Go (now using **Go 1.22**) and the Docker image is built using a multi-stage build with an Alpine Linux base for a minimal footprint.
+
+## Environment Variables
 
 | Variable | Default value |
 |----------|:-------------:|
 | URL      | default       |
 | MSG      | OK            |
-| URL      | * * * * *     |
+| CRON     | * * * * *     |
 
-The URL must be stored. The other values can be used directly as default values. The milliseconds for the ping are calculated directly during the execution of the software.
+- **URL** must be set to your Uptime Kuma push endpoint.
+- **MSG** is the message sent (default: OK).
+- **CRON** is the cron schedule (default: every minute).
+
+The milliseconds for the ping are calculated directly during the execution of the software.
+
+## Health Check
+
+A health check endpoint is available at [`/health`](http://localhost:8080/health) on port 8080. Example:
+
+```console
+curl http://localhost:8080/health
+```
+
+Response:
+```json
+{
+  "status": "healthy",
+  "timestamp": "2024-05-01T12:00:00Z",
+  "service": "uptime-kuma-push"
+}
+```
 
 ## Launch Docker Container
 
-To start the container properly, here is a small template. No volumes need to be mapped and no port is needed, because the software does not need to be accessed directly.
+To start the container properly, here is a small template. No volumes need to be mapped. The health check is available on port 8080.
 
 ```console
-docker run -d --restart always --name uptime-kuma-push-service -e URL='https://uptime-kuma.test.de/api/push/M4KzP0tSTB' jjdevelopment/uptime-kuma-push-service
+docker run -d --restart always \
+  --name uptime-kuma-push-service \
+  -e URL='https://uptime-kuma.test.de/api/push/M4KzP0tSTB' \
+  -p 8080:8080 \
+  jjdevelopment/uptime-kuma-push-service
 ```
 
-Now the container can be started, so that the service can access your Uptime Kuma service and you always know if your servers in the office or at home are still running.
+## Docker Compose Example
 
-If you want to run the docker image on a raspberry pi, you have to clone the repository once and create a docker image with the command `docker image build -t jjdevelopment/uptime-kuma-server-push .`.
+You can also use Docker Compose. Here is an example `docker-compose.yaml`:
 
-Click [here](https://hub.docker.com/r/jjdevelopment/uptime-kuma-push-service) to go directly to the Docker HUB.
+```yaml
+services:
+  uptime-kuma-push:
+    image: jjdevelopment/uptime-kuma-push-service:latest
+    restart: always
+    environment:
+      - URL=https://uptime-kuma.test.de/api/push/M4KzP0tSTB
+      - MSG=OK
+      - CRON=* * * * *
+    ports:
+      - "8080:8080"
+```
+
+## Build Locally (Optional)
+
+If you want to run the docker image on a Raspberry Pi or other architecture, clone the repository and build the image:
+
+```console
+docker build -t jjdevelopment/uptime-kuma-push-service .
+```
 
 ## Contribute
 

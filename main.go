@@ -27,12 +27,40 @@ type UptimeKumaReturn struct {
 	Msg string `json:"msg,omitempty"`
 }
 
+// HealthResponse represents the health check response
+type HealthResponse struct {
+	Status    string    `json:"status"`
+	Timestamp time.Time `json:"timestamp"`
+	Service   string    `json:"service"`
+}
+
+func healthHandler(w http.ResponseWriter, r *http.Request) {
+	response := HealthResponse{
+		Status:    "healthy",
+		Timestamp: time.Now(),
+		Service:   "uptime-kuma-push",
+	}
+	
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(response)
+}
+
 func main() {
 
 	// Get environment & check the length
 	url := os.Getenv("URL")
 	msg := os.Getenv("MSG")
 	cron := os.Getenv("CRON")
+
+	// Start HTTP server for health checks
+	go func() {
+		http.HandleFunc("/health", healthHandler)
+		log.Println("Starting health check server on :8080")
+		if err := http.ListenAndServe(":8080", nil); err != nil {
+			log.Printf("Health check server error: %v", err)
+		}
+	}()
 
 	// Define cronjobs
 	s := gocron.NewScheduler(time.UTC)
