@@ -1,6 +1,6 @@
-module github.com/jjideenschmiede/uptime-kuma-server-push
+module github.com/akoscomp/uptime-kuma-server-push
 
-go 1.22
+go 1.24
 
 require github.com/go-co-op/gocron v1.37.0
 

@@ -1,6 +1,6 @@
 # Uptime Kuma Push Service
 
-[![GitHub go.mod Go version of a Go module](https://img.shields.io/github/go-mod/go-version/jjideenschmiede/uptime-kuma-push-service.svg)](https://golang.org/) [![Go](https://github.com/jjideenschmiede/uptime-kuma-push-service/actions/workflows/go.yml/badge.svg)](https://github.com/jjideenschmiede/uptime-kuma-server-push/actions/workflows/go.yml) [![Docker Image CI](https://github.com/jjideenschmiede/uptime-kuma-push-service/actions/workflows/docker-image.yml/badge.svg)](https://github.com/jjideenschmiede/uptime-kuma-server-push/actions/workflows/docker-image.yml) [![Docker Hub](https://img.shields.io/docker/pulls/jjdevelopment/uptime-kuma-push-service.svg)](https://hub.docker.com/r/jjdevelopment/uptime-kuma-push-service)
+[![GitHub go.mod Go version of a Go module](https://img.shields.io/github/go-mod/go-version/akoscomp/uptime-kuma-push-service.svg)](https://golang.org/) [![Go](https://github.com/akoscomp/uptime-kuma-push-service/actions/workflows/go.yml/badge.svg)](https://github.com/akoscomp/uptime-kuma-server-push/actions/workflows/go.yml) [![Docker Image CI](https://github.com/akoscomp/uptime-kuma-push-service/actions/workflows/docker-image.yml/badge.svg)](https://github.com/akoscomp/uptime-kuma-server-push/actions/workflows/docker-image.yml) [![Docker Hub](https://img.shields.io/docker/pulls/akoscomp/uptime-kuma-push-service.svg)](https://hub.docker.com/r/akoscomp/uptime-kuma-push-service)
 
 This Docker image is for sending a heartbeat to an [Uptime Kuma](https://github.com/louislam/uptime-kuma) server. Here you will find a little introduction on how to use it.
 
@@ -46,7 +46,7 @@ docker run -d --restart always \
   --name uptime-kuma-push-service \
   -e URL='https://uptime-kuma.test.de/api/push/M4KzP0tSTB' \
   -p 8080:8080 \
-  jjdevelopment/uptime-kuma-push-service
+  akoscomp/uptime-kuma-push-service
 ```
 
 ## Docker Compose Example
@@ -56,7 +56,7 @@ You can also use Docker Compose. Here is an example `docker-compose.yaml`:
 ```yaml
 services:
   uptime-kuma-push:
-    image: jjdevelopment/uptime-kuma-push-service:latest
+    image: akoscomp/uptime-kuma-push-service:latest
     restart: always
     environment:
       - URL=https://uptime-kuma.test.de/api/push/M4KzP0tSTB
@@ -71,9 +71,9 @@ services:
 If you want to run the docker image on a Raspberry Pi or other architecture, clone the repository and build the image:
 
 ```console
-docker build -t jjdevelopment/uptime-kuma-push-service .
+docker build -t akoscomp/uptime-kuma-push-service .
 ```
 
 ## Contribute
 
-If you want to help with development, or have found a bug, open a [new issue](https://github.com/jjideenschmiede/uptime-kuma-push-service/issues).
+If you want to help with development, or have found a bug, open a [new issue](https://github.com/akoscomp/uptime-kuma-push-service/issues).
