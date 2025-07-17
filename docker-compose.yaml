@@ -1,10 +1,10 @@
 services:
   uptime-kuma-push:
-    image: jjdevelopment/uptime-kuma-push-service:latest
+    image: akoscomp/uptime-kuma-push-service:latest
     restart: always
     environment:
       - URL=https://uptime-kuma.test.de/api/push/M4KzP0tSTB
       - MSG=OK
       - CRON=* * * * *
     ports:
-      - "8080:8080" 
+      - "8080:8080"
